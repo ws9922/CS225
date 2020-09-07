@@ -63,3 +63,4 @@ tests-part2.o : tests/tests-part2.cpp cs225/catch/catch.hpp lab_intro.cpp lab_in
 
 clean :
 	-rm -f *.o $(EXENAME) test
+

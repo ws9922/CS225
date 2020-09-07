@@ -8,7 +8,7 @@
 #include <utility> // std::pair
 
 int main(){
-    Dog my_dog = Dog("Skye");
+    Dog my_dog = Dog("S");
     my_dog.bark();
     my_dog.run(30, 10);
     my_dog.read_tag();

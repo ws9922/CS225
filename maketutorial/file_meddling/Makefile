@@ -22,3 +22,6 @@ clean :
 
 really_clean :
 	rm junk*
+
+open_file :
+	emacs another_silly_file
