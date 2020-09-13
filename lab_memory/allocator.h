@@ -46,6 +46,8 @@ class Allocator
      */
     void printRooms(std::ostream & stream = std::cout);
 
+    ~Allocator();
+
   private:
     /**
      * Creates the array of letters.
@@ -65,7 +67,8 @@ class Allocator
      */
     void loadRooms(const std::string& file);
 
-
+    void clear();
+    
     /**
      * Runs the algorithm on the set of rooms and students.
      */
