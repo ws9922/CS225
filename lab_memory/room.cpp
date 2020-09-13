@@ -67,6 +67,12 @@ void Room::clear()
     }
 }
 
-void Room::copy(const Room& other) : name(other.name), capacity(other.capacity), count(other.count), letterCount(other.letterCount), letters(other.letters)
+void Room::copy(const Room& other)
 {
+    name = other.name;
+    capacity = other.capacity;
+    count = other.count;
+    letterCount = other.letterCount;
+    letters = other.letters;
+
 }
