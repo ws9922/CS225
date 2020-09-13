@@ -44,6 +44,7 @@ void Allocator::loadRooms(const std::string& file)
 {
     // Read in rooms
     fileio::loadRooms(file);
+    roomCount = fileio::getNumRooms;
     rooms = new Room[roomCount];
 
     totalCapacity = 0;
@@ -83,6 +84,20 @@ void Allocator::printRooms(std::ostream & stream /* = std::cout */)
          << std::endl;
     for (int i = 0; i < roomCount; i++)
         rooms[i].print(stream);
+}
+
+Allocator::~Allocator()
+{
+    clear();
+}
+
+void Allocator::clear() {
+    if (rooms != NULL) {
+        delete[] rooms;
+    }
+    if (alpha != NULL) {
+        delete[] alpha;
+    }
 }
 
 int Allocator::solve()
