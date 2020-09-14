@@ -26,6 +26,8 @@ class Letter
      */
     Letter();
 
+  
+
     /**
      * Adds one additional student to the letter group.
      */

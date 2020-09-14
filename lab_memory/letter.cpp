@@ -9,6 +9,7 @@ Letter::Letter() : letter('-'), count(0)
 {
 }
 
+
 void Letter::addStudent()
 {
     count++;
