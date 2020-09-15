@@ -90,12 +90,10 @@ Allocator::~Allocator()
 }
 
 void Allocator::clear() {
-    if (rooms != NULL) {
-        delete[] rooms;
-    }
-    if (alpha != NULL) {
-        delete[] alpha;
-    }
+    delete[] rooms;
+    rooms = nullptr;
+    delete[] alpha;
+    alpha = nullptr;
 }
 
 int Allocator::solve()
