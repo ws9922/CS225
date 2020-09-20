@@ -332,4 +332,3 @@ TEST_CASE("A Stickersheet with stickers placed beyond base image boundaries work
 
   REQUIRE( sheet.render() == alma );
 }
-

@@ -151,16 +151,16 @@ void Image::rotateColor(double degrees) {
 }
 
 void Image::scale(double factor) {
-    unsigned int newwidth = width() * factor;
-    unsigned int newheight = height() * factor;
+    int newwidth = width() * factor;
+    int newheight = height() * factor;
     resize(newwidth, newheight);
 }
 
 void Image::scale(unsigned w, unsigned h) {
     int width_factor = w / width();
     int height_factor = h / height();
-    unsigned int newwidth = 0;
-    unsigned int newheight = 0;
+    int newwidth = 0;
+    int newheight = 0;
     if (width_factor <= height_factor) {
         newwidth = width_factor * width();
         newheight = width_factor * height();
