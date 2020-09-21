@@ -137,36 +137,54 @@ void Image::saturate(double amount) {
 }
 
 void Image::rotateColor(double degrees) {
-    double d = (int) degrees % 360;
      for (unsigned x = 0; x < width(); x++) {
         for (unsigned y = 0; y < height(); y++) {
             HSLAPixel & pixel = getPixel(x, y);
-            if (pixel.h + d >= 360) {
-                pixel.h = pixel.h + d - 360;
+            if (pixel.h + degrees >= 360) {
+                pixel.h = pixel.h + degrees - 360;
+            } else if(pixel.h + degrees <= 0) {
+                pixel.h = pixel.h + degrees + 360;
             } else {
-                pixel.h += d;
+                pixel.h = pixel.h + degrees;
             }
         }
     } 
 }
 
 void Image::scale(double factor) {
-    int newwidth = width() * factor;
-    int newheight = height() * factor;
-    resize(newwidth, newheight);
+    Image old = *this;
+    unsigned int newwidth = width() * factor;
+    unsigned int newheight = height() * factor;
+    this->resize(newwidth, newheight);
+    for (unsigned x = 0; x < newwidth; x++) {
+        for (unsigned y = 0; y < newheight; y++) {
+            HSLAPixel & pixel = getPixel(x, y);
+            pixel = old.getPixel((int)(x/factor), (int)(y/factor));
+        }
+    } 
 }
 
 void Image::scale(unsigned w, unsigned h) {
-    int width_factor = w / width();
-    int height_factor = h / height();
-    int newwidth = 0;
-    int newheight = 0;
+    Image old = *this;
+    double width_factor = (double)w / (double) width();
+    double height_factor = (double)h / (double) height();
+    unsigned int newwidth = 0;
+    unsigned int newheight = 0;
+    double factor = 0;
     if (width_factor <= height_factor) {
         newwidth = width_factor * width();
         newheight = width_factor * height();
+        factor = width_factor;
     } else {
         newwidth = height_factor * width();
         newheight = height_factor * height();
+        factor = height_factor;
     }
-    resize(newwidth, newheight);
+    this->resize(newwidth, newheight);
+    for (unsigned x = 0; x < newwidth; x++) {
+        for (unsigned y = 0; y < newheight; y++) {
+            HSLAPixel & pixel = getPixel(x, y);
+            pixel = old.getPixel((int)(x/factor), (int)(y/factor));
+        }
+    } 
 }
