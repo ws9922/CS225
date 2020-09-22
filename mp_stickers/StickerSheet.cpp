@@ -8,6 +8,9 @@ StickerSheet::StickerSheet(const Image& picture, unsigned max) {
     max_ = max;
     arry = new Image*[max_];
     base = new Image(picture);
+    for (unsigned int i = 0; i < max_; i++) {
+        arry[i] = NULL;
+    }
 }
 StickerSheet::~StickerSheet() {
     for (unsigned int i = 0; i < max_; i++) {
@@ -57,10 +60,13 @@ int StickerSheet::addSticker(Image &sticker, unsigned x, unsigned y) {
 void StickerSheet::changeMaxStickers(unsigned max) {
     Image** oldarry = new Image*[max_];
     for (unsigned int i = 0; i < max_; i++) {
-        oldarry[i] = new Image(*(this->arry[i]));
+        oldarry[i] = arry[i];
     }
+    std::cout << "line " << __LINE__  << std::endl;
     unsigned int oldmax = this->max_;
     this->max_ = max;
+    arry = new Image*[max_];
+    std::cout << "line " << __LINE__  << std::endl;
     if (oldmax >= max) {
         for (unsigned int i = 0; i < max; i++) {
             arry[i] = oldarry[i];
@@ -70,66 +76,66 @@ void StickerSheet::changeMaxStickers(unsigned max) {
             arry[i] = oldarry[i];
         }
     }
+    std::cout << "line " << __LINE__ << std::endl;
     for (unsigned int i = 0; i < oldmax; i++) {
             delete oldarry[i];
             oldarry[i] = NULL;
         }
     delete[] oldarry;
+    std::cout << "line " << __LINE__ << std::endl;
 }
+    
 
 Image * StickerSheet::getSticker (unsigned index) {
-    if (arry[index] == nullptr || index >= max_) {
+    if (arry[index] == NULL || index >= max_) {
         return NULL;
     }
     return arry[index];
 }
 
 void StickerSheet::removeSticker(unsigned index) {
-    delete arry[index];
-    arry[index] = nullptr;
+    arry[index] = NULL;
 }
 
 Image StickerSheet::render() const {
     unsigned int width = base->width();
     unsigned int height = base->height();
-    std::cout << "Reached line " << __LINE__ << std::endl;
     for (unsigned int i = 0; i < max_; i++) {
-        if ((arry[i]->width() + arry[i]->x_) > width) {
-            width = arry[i]->width() + arry[i]->x_;
-        }
-        if ((arry[i]->height() + arry[i]->y_) > height) {
-            height = arry[i]->height() + arry[i]->y_;
+        if (arry[i] != NULL) {
+            if ((arry[i]->width() + arry[i]->x_) > width) {
+                width = arry[i]->width() + arry[i]->x_;
+            }
+            if ((arry[i]->height() + arry[i]->y_) > height) {
+                height = arry[i]->height() + arry[i]->y_;
+            }
         }
     }
-    std::cout << "Reached line " << __LINE__ << std::endl;
     Image result;
-    std::cout << "Reached line " << __LINE__ << std::endl;
     result.resize(width, height);
-    std::cout << "Reached line " << __LINE__ << std::endl;
     for (unsigned x = 0; x < base->width(); x++) {
         for (unsigned y = 0; y < base->height(); y++) {
             HSLAPixel & pixel = result.getPixel(x, y);
             pixel = base->getPixel(x, y);
         }
     }
-    std::cout << "Reached line " << __LINE__ << std::endl;
     for (unsigned int i = 0; i < max_; i++) {
-        for (unsigned x = arry[i]->x_; x < arry[i]->x_ + arry[i]->width(); x++) {
-            for (unsigned y = arry[i]->y_; y < arry[i]->y_ + arry[i]->height(); y++) {
-                HSLAPixel & pixel = result.getPixel(x, y);
-                HSLAPixel stickerPixel = arry[i]->getPixel(x, y);
-                if (stickerPixel.a != 0) {
-                    pixel = stickerPixel;
+        if (arry[i] != NULL) {
+            for (unsigned x = arry[i]->x_; x < arry[i]->x_ + arry[i]->width(); x++) {
+                for (unsigned y = arry[i]->y_; y < arry[i]->y_ + arry[i]->height(); y++) {
+                    HSLAPixel & pixel = result.getPixel(x, y);
+                    HSLAPixel stickerPixel = arry[i]->getPixel(x - (arry[i]->x_), y - (arry[i]->y_));
+                    if (stickerPixel.a != 0) {
+                        pixel = stickerPixel;
+                    }
                 }
             }
         }
     }
-    std::cout << "Reached line " << __LINE__ << std::endl;
     return result;
 }
 
 bool StickerSheet::translate(unsigned index, unsigned x, unsigned y) {
-    if (arry[index] == nullptr || index >= max_) {
+    if (arry[index] == NULL || index >= max_) {
         return false;
     }
     arry[index]->x_ = x;

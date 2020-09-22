@@ -8,7 +8,6 @@ using std::string;
 using cs225::HSLAPixel;
 using cs225::PNG;
 
-#include <iostream>
 
 void Image::darken() {
     for (unsigned x = 0; x < width(); x++) {
