@@ -62,27 +62,27 @@ void StickerSheet::changeMaxStickers(unsigned max) {
     for (unsigned int i = 0; i < max_; i++) {
         oldarry[i] = arry[i];
     }
-    std::cout << "line " << __LINE__  << std::endl;
     unsigned int oldmax = this->max_;
     this->max_ = max;
     arry = new Image*[max_];
-    std::cout << "line " << __LINE__  << std::endl;
-    if (oldmax >= max) {
+    if (oldmax >= max && max > 0) {
         for (unsigned int i = 0; i < max; i++) {
             arry[i] = oldarry[i];
         }
-    } else {
+    }   
+    if(max > oldmax && max > 0){
         for (unsigned int i = 0; i < oldmax; i++) {
             arry[i] = oldarry[i];
         }
+        for (unsigned int i = oldmax; i < max; i++) {
+            arry[i] = NULL;
+        }
     }
-    std::cout << "line " << __LINE__ << std::endl;
     for (unsigned int i = 0; i < oldmax; i++) {
             delete oldarry[i];
             oldarry[i] = NULL;
         }
     delete[] oldarry;
-    std::cout << "line " << __LINE__ << std::endl;
 }
     
 
