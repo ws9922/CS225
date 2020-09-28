@@ -31,7 +31,14 @@ T sum(stack<T>& s)
 {
 
     // Your code here
-    return T(); // stub return value (0 for primitive types). Change this!
+    if (s.empty()) {
+        return 0;
+    }
+    T top = s.top();
+    s.pop();
+    T result = top + sum(s);
+    s.push(top);
+    return result; // stub return value (0 for primitive types). Change this!
                 // Note: T() is the default value for objects, and 0 for
                 // primitive types
 }
@@ -55,9 +62,25 @@ T sum(stack<T>& s)
  */
 bool isBalanced(queue<char> input)
 {
+    stack<char> s;
+    //char[] element = new char[input.size()];
+    int size = input.size();
+    for (int i = 0; i < size; i++) {
+        char element = input.front();
+        input.pop();
+        if (element == '[') {
+            s.push(element);
+        } else if (element == ']') {
+            if (s.empty()) {
+                return false;
+            }
+            s.pop();
+        }
+    }
+    return s.empty();
+
 
     // @TODO: Make less optimistic
-    return true;
 }
 
 /**
@@ -78,9 +101,46 @@ bool isBalanced(queue<char> input)
 template <typename T>
 void scramble(queue<T>& q)
 {
-    stack<T> s;
-    // optional: queue<T> q2;
+    queue<T> s;
+    //queue<T> q2;
 
     // Your code here
+    while (!q.empty()) {
+        s.push(q.front());
+        q.pop();
+    } 
+    bool reverse = false;
+    int i = 1;
+    while (!s.empty()) {
+        if (reverse) {
+            stack<T> temp;
+            for(int j = 0; j < i; j++) {
+                temp.push(s.front());
+                s.pop();
+                if(s.empty()) {
+                    break;
+                }
+            }
+            for (int j = 0; j < i; j++) {
+                q.push(temp.top());
+                temp.pop();
+                if(temp.empty()) {
+                    break;
+                }
+            }
+        } else {
+            for (int j = 0; j < i; j++) {
+                q.push(s.front());
+                s.pop();
+                if(s.empty()) {
+                    break;
+                }
+            }
+        }
+        reverse = !reverse;
+        i++;
+    }
+       
+
 }
 }
