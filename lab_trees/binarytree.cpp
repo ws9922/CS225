@@ -5,7 +5,6 @@
  */
 #include "TreeTraversals/InorderTraversal.h"
 #include <iostream>
-
 /**
  * @return The height of the binary tree. Recall that the height of a binary
  *  tree is just the length of the longest path from the root to a leaf, and
@@ -75,10 +74,23 @@ void BinaryTree<T>::printLeftToRight(const Node* subRoot) const
  * Flips the tree over a vertical axis, modifying the tree itself
  *  (not creating a flipped copy).
  */
-    template <typename T>
+template <typename T>
 void BinaryTree<T>::mirror()
 {
     //your code here
+    return mirror(root);
+}
+
+template <typename T>
+void BinaryTree<T>::mirror(Node* subRoot) {
+    if (subRoot == NULL) {
+        return;
+    }
+    Node * temp = subRoot -> left;
+    subRoot->left = subRoot->right;
+    subRoot->right = temp;
+    mirror(subRoot->left);
+    mirror(subRoot->right);
 }
 
 
@@ -92,8 +104,28 @@ template <typename T>
 bool BinaryTree<T>::isOrderedIterative() const
 {
     // your code here
-    return false;
+    std::stack<Node*> s;
+    Node* current = this->root;
+    Node* Last = NULL;
+    Node* Next = NULL;
+    
+    while (current != NULL || !s.empty()) {
+        while(current != NULL) {
+        s.push(current);
+        current = current->left;
+        }
+        Next = s.top();
+        current = Next->right;
+        s.pop();
+        if(Last != NULL && Last->elem > Next->elem) {
+            return false;
+        }
+        Last = Next;
+    }
+    return true;
 }
+
+
 
 /**
  * isOrdered() function recursive version
@@ -105,6 +137,59 @@ template <typename T>
 bool BinaryTree<T>::isOrderedRecursive() const
 {
     // your code here
-    return false;
+    return isOrderedRecursive(root);
+}
+
+/**
+ * Private helper function for the public isOrderedRecursive function.
+ * @param subRoot
+ */
+template <typename T>
+bool BinaryTree<T>::isOrderedRecursive(const Node* subRoot) const
+{
+    if (subRoot == NULL)
+        return true;
+
+    // check if left chiled is ordered
+    if (!isOrderedRecursive(subRoot->left))
+        return false;
+    // check if right chiled is ordered
+    if (!isOrderedRecursive(subRoot->right))
+        return false;
+
+    // check if root value is greater than the largest in left child
+    if (subRoot->left != NULL && subRoot->elem < findMax(subRoot->left))
+        return false;
+    // check if root value is smaller than the smallest in right child
+    if (subRoot->right != NULL && subRoot->elem > findMin(subRoot->right))
+        return false;
+
+    return true;
+}
+
+template <typename T>
+T BinaryTree<T>::findMax(const Node* subRoot) const
+{
+    T currentMax = subRoot->elem;
+    if (subRoot->left!=NULL) {
+        currentMax = std::max(currentMax, findMax(subRoot->left));
+    }
+    if (subRoot->right!=NULL) {
+        currentMax = std::max(currentMax, findMax(subRoot->right));
+    }
+    return currentMax;
+}
+
+template <typename T>
+T BinaryTree<T>::findMin(const Node* subRoot) const
+{
+    T currentMin = subRoot->elem;
+    if (subRoot->left!=NULL) {
+        currentMin = std::min(currentMin, findMin(subRoot->left));
+    }
+    if (subRoot->right!=NULL) {
+        currentMin = std::min(currentMin, findMin(subRoot->right));
+    }
+    return currentMin;
 }
 

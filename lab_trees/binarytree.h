@@ -171,6 +171,14 @@ class BinaryTree
          */
         void printLeftToRight(const Node* subRoot) const;
 
+        void mirror(Node* subRoot);
+
+        bool isOrderedRecursive(const Node* subRoot) const;
+
+        T findMax(const Node* subRoot) const;
+
+        T findMin(const Node* subRoot) const;
+
 
 
 
