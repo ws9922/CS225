@@ -3,6 +3,7 @@
 #include "../StickerSheet.h"
 #include "../cs225/PNG.h"
 #include "../cs225/HSLAPixel.h"
+#include <random>
 
 using namespace cs225;
 
