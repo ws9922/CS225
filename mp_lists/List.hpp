@@ -317,47 +317,44 @@ typename List<T>::ListNode * List<T>::merge(ListNode * first, ListNode* second) 
   firsttail->next = second;
   second->pre = firsttail;
   first.s**/
-  ListNode* firstptr;
-  ListNode* secondptr;
-  ListNode* current;
-  T firstData;
-  T secondData;
-  if(first->data < second->data) {
-    head_=first;
-    firstptr = first->next;
-    secondptr = second;
-  } else {
-    head_ = second;
-    secondptr = second->next;
-    firstptr = first;
-  }
-  current = head_;
-  while (firstptr != NULL && secondptr != NULL) {
-    firstData = firstptr->data;
-    secondData = secondptr->data;
-    if (firstData < secondData) {
-      current->next = firstptr;
-      firstptr->prev = current;
-      current = firstptr;
-      firstptr = firstptr->next;
+  ListNode* head = NULL;
+  ListNode* temp = NULL;
+  ListNode* current = NULL;
+  bool condition = true;
+  while(true){
+    if(second->data<first->data) {
+      temp =second;
+      second = second->next;
+      if(condition) {
+        head = temp;
+      } else {
+      current->next = temp;
+      temp->prev = current;
+      temp->next = NULL;
+      }
+      current = temp;
+      if(second == NULL) {
+        current->next = first;
+        return head;
+      }
     } else {
-      current->next = secondptr;
-      secondptr->prev = current;
-      current = secondptr;
-      secondptr = secondptr->next;
+      temp = first;
+      first = first->next;
+      if(condition) {
+        head = temp;
+      } else {
+        current->next = temp;
+        temp->prev = current;
+        temp->next = NULL;
+      }
+      current = temp;
+      if (first == NULL) {
+        current->next = second;
+        return head;
+      }
     }
-    if (firstptr == NULL) {
-      current->next = secondptr;
-    }
-    if (secondptr == NULL) {
-      current->next = firstptr;
-    }
-    tail_ = current;
-    /**while (tail_ != NULL) {
-      
-    }**/
+    condition = false;
   }
-  return NULL;
 }
 
 /**
