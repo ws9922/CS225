@@ -5,6 +5,7 @@
 #include <queue>
 #include <stack>
 #include <vector>
+#include <algorithm>
 
 #include "../cs225/PNG.h"
 #include "../Point.h"
@@ -22,8 +23,13 @@
  * @param tolerance If the current point is too different (difference larger than tolerance) with the start point,
  * it will not be included in this DFS
  */
-DFS::DFS(const PNG & png, const Point & start, double tolerance) {  
+DFS::DFS(const PNG & png, const Point & start, double tolerance):png_(png), start_(start) {  
   /** @todo [Part 1] */
+  tolerance_ = tolerance;
+  unsigned x = start.x;
+  unsigned y = start.y;
+  HSLAPixel start_pixel = png.getPixel(x, y);
+  to_visit.push(start_);
 }
 
 /**
@@ -31,7 +37,10 @@ DFS::DFS(const PNG & png, const Point & start, double tolerance) {
  */
 ImageTraversal::Iterator DFS::begin() {
   /** @todo [Part 1] */
-  return ImageTraversal::Iterator();
+  to_visit = std::stack<Point>();
+  to_visit.push(start_);
+  ImageTraversal::Iterator it(this, &(this->png_), &(this->start_), this->tolerance_);
+  return it;
 }
 
 /**
@@ -39,7 +48,9 @@ ImageTraversal::Iterator DFS::begin() {
  */
 ImageTraversal::Iterator DFS::end() {
   /** @todo [Part 1] */
-  return ImageTraversal::Iterator();
+  to_visit = std::stack<Point>();
+  ImageTraversal::Iterator it(this, &(this->png_), &(this->start_), this->tolerance_);
+  return it;
 }
 
 /**
@@ -47,6 +58,7 @@ ImageTraversal::Iterator DFS::end() {
  */
 void DFS::add(const Point & point) {
   /** @todo [Part 1] */
+  to_visit.push(point);
 }
 
 /**
@@ -54,7 +66,9 @@ void DFS::add(const Point & point) {
  */
 Point DFS::pop() {
   /** @todo [Part 1] */
-  return Point(0, 0);
+  Point result = to_visit.top();
+  to_visit.pop();
+  return result;
 }
 
 /**
@@ -62,7 +76,8 @@ Point DFS::pop() {
  */
 Point DFS::peek() const {
   /** @todo [Part 1] */
-  return Point(0, 0);
+  Point result = to_visit.top();
+  return result;
 }
 
 /**
@@ -70,5 +85,5 @@ Point DFS::peek() const {
  */
 bool DFS::empty() const {
   /** @todo [Part 1] */
-  return true;
+  return to_visit.empty();
 }

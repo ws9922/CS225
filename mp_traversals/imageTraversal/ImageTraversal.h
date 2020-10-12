@@ -7,6 +7,7 @@
 #include "../cs225/HSLAPixel.h"
 #include "../cs225/PNG.h"
 #include "../Point.h"
+#include <vector>
 
 using namespace cs225;
 
@@ -28,7 +29,7 @@ public:
    */
   class Iterator : std::iterator<std::forward_iterator_tag, Point> {
   public:
-    Iterator();
+    Iterator(ImageTraversal* traversal, const PNG * png, const Point * start, double tolerance);
 
     Iterator & operator++();
     Point operator*();
@@ -36,11 +37,15 @@ public:
 
     /** @todo [Part 1] */
     /** add member functions if neccesary*/
-
+    
   private:
     /** @todo [Part 1] */
     /** add private members here if neccesary*/
-
+    ImageTraversal* traversal_;
+    const PNG*  png_;
+    const Point* start_;
+    double tolerance_;
+    std::vector<Point> visited;
   };
 
   /**

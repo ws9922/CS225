@@ -1,6 +1,7 @@
 #include <cmath>
 #include <iterator>
 #include <iostream>
+#include <vector>
 
 #include "../cs225/HSLAPixel.h"
 #include "../cs225/PNG.h"
@@ -31,8 +32,14 @@ double ImageTraversal::calculateDelta(const HSLAPixel & p1, const HSLAPixel & p2
 /**
  * Default iterator constructor.
  */
-ImageTraversal::Iterator::Iterator() {
+ImageTraversal::Iterator::Iterator(ImageTraversal * traversal, const PNG * png, const Point * start, double tolerance) {
   /** @todo [Part 1] */
+  traversal_ = traversal;
+  png_ = png;
+  start_ = start;
+  tolerance_ = tolerance;
+  std::vector<Point> visited;
+  visited.push_back(*start_);
 }
 
 /**
@@ -42,8 +49,51 @@ ImageTraversal::Iterator::Iterator() {
  */
 ImageTraversal::Iterator & ImageTraversal::Iterator::operator++() {
   /** @todo [Part 1] */
+  Point point = traversal_->peek();
+  traversal_->pop();
+  HSLAPixel start_pixel = png_->getPixel(start_->x, start_->y);
+  unsigned int height = png_->height();
+  unsigned int width = png_->width();
+  unsigned x = point.x;
+  unsigned y = point.y;
+  
+
+  if(x + 1 < width) {
+    HSLAPixel right = png_->getPixel(x + 1, y);
+    Point right_point(x + 1, y);
+    if (ImageTraversal::calculateDelta(start_pixel, right) < tolerance_ && std::find(visited.begin(), visited.end(), right_point) == visited.end()) {
+      traversal_->add(right_point);
+      visited.push_back(right_point);
+    }
+  }
+  if(y + 1 < height) {
+    HSLAPixel below = png_->getPixel(x, y + 1);
+    Point below_point(x , y + 1);
+    if (ImageTraversal::calculateDelta(start_pixel, below) < tolerance_ && std::find(visited.begin(), visited.end(), below_point) == visited.end()) {
+      traversal_->add(below_point);
+      visited.push_back(below_point);
+    }
+  }
+  if(x - 1 >= 0) {
+    HSLAPixel left = png_->getPixel(x - 1, y);
+    Point left_point(x - 1 , y);
+    if (ImageTraversal::calculateDelta(start_pixel, left) < tolerance_ && std::find(visited.begin(), visited.end(), left_point) == visited.end()) {
+      traversal_->add(left_point);
+      visited.push_back(left_point);
+    }
+  }
+  if(y - 1 >= 0) {
+    HSLAPixel above = png_->getPixel(x, y - 1);
+    Point above_point(x , y - 1);
+    if (ImageTraversal::calculateDelta(start_pixel, above) < tolerance_ && std::find(visited.begin(), visited.end(), above_point) == visited.end()) {
+      traversal_->add(above_point);
+      visited.push_back(above_point);
+    }
+  }
+  
   return *this;
 }
+
 
 /**
  * Iterator accessor opreator.
@@ -52,8 +102,9 @@ ImageTraversal::Iterator & ImageTraversal::Iterator::operator++() {
  */
 Point ImageTraversal::Iterator::operator*() {
   /** @todo [Part 1] */
-  return Point(0, 0);
+  return traversal_->peek();
 }
+
 
 /**
  * Iterator inequality operator.
@@ -62,6 +113,20 @@ Point ImageTraversal::Iterator::operator*() {
  */
 bool ImageTraversal::Iterator::operator!=(const ImageTraversal::Iterator &other) {
   /** @todo [Part 1] */
-  return false;
+  if(this->traversal_->empty() || other.traversal_->empty()) {
+    if(this->traversal_->empty() && other.traversal_->empty()) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+  if (traversal_->peek() == other.traversal_->peek()) {
+    return false;
+  }
+  else
+  {
+    return true;
+  }
+  
 }
 
