@@ -11,8 +11,12 @@ using namespace cs225;
  */
 class MyColorPicker : public ColorPicker {
 public:
+  MyColorPicker(HSLAPixel backgroundColor, double spacing, double increment);
   HSLAPixel getColor(unsigned x, unsigned y);
 
 private:
-
+  HSLAPixel backgroundColor;
+  unsigned spacing;
+  double hue;
+  double increment;
 };

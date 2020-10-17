@@ -16,8 +16,10 @@ using namespace cs225;
  * 
  * @param png The starting image of a FloodFilledImage
  */
-FloodFilledImage::FloodFilledImage(const PNG & png) {
+FloodFilledImage::FloodFilledImage(const PNG & png):png_(png) {
   /** @todo [Part 2] */
+  store_tvs = std::queue<ImageTraversal*>();
+  store_cp = std::queue<ColorPicker*>();
 }
 
 /**
@@ -29,6 +31,8 @@ FloodFilledImage::FloodFilledImage(const PNG & png) {
  */
 void FloodFilledImage::addFloodFill(ImageTraversal & traversal, ColorPicker & colorPicker) {
   /** @todo [Part 2] */
+  store_tvs.push(&traversal);
+  store_cp.push(&colorPicker);
 }
 
 /**
@@ -53,5 +57,27 @@ void FloodFilledImage::addFloodFill(ImageTraversal & traversal, ColorPicker & co
 Animation FloodFilledImage::animate(unsigned frameInterval) const {
   Animation animation;
   /** @todo [Part 2] */
+  PNG after = png_;
+  int step = 0;
+  /**while (!store_tvs.empty() && !store_cp.empty()) {
+    ImageTraversal * tvs = store_tvs.front();
+    store_tvs.pop();
+    ColorPicker * cp = store_cp.front();
+    store_cp.pop();
+    for (ImageTraversal::Iterator it = tvs->begin(); it != tvs->end(); ++it) {
+      Point to_change_point = *it;
+      HSLAPixel& to_change_pixel = after.getPixel(to_change_point.x, to_change_point.y);
+      to_change_pixel = cp->getColor(to_change_point.x, to_change_point.y);
+      step++;
+      if (step % frameInterval == 0) {
+        animation.addFrame(after);
+      }
+    }
+  }
+  if (step % frameInterval != 0) {
+    animation.addFrame(after);
+  }**/
+  
+
   return animation;
 }

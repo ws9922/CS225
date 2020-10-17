@@ -27,19 +27,6 @@
 
 using namespace cs225;
 
-PNG getTestPNG() {
-  PNG png(4, 4);
-  HSLAPixel blackPixel(180, 1, 0);
-  
-  for (unsigned i = 0; i < 4; i++) {
-    png.getPixel(i, 0) = blackPixel;
-    png.getPixel(0, i) = blackPixel;
-    png.getPixel(i, 3) = blackPixel;
-    png.getPixel(3, i) = blackPixel;
-  }
-    
-  return png;
-}
 
 int main() {
 
@@ -54,30 +41,26 @@ int main() {
   animation.write("myFloodFill.gif");
   */
 
-  PNG png = getTestPNG();
-  Point startPoint(0, 0);
+  PNG png;       png.readFromFile("tests/i.png");
+
+  HSLAPixel backgroundColor(0, 0, 0);
+  double spacing = 5;
+  double increment = 10;
+  FloodFilledImage image(png);
+  DFS dfs(png, Point(0, 0), 0.05);
+  MyColorPicker mycolor(backgroundColor, spacing, increment);
+  image.addFloodFill( dfs, mycolor);
+
+  BFS bfs(png, Point(110, 150), 0.05);
+  RainbowColorPicker rainbow(0.05);
+  image.addFloodFill( bfs, rainbow );
+
+  Animation animation = image.animate(1000);
+
+  PNG lastFrame = animation.getFrame( animation.frameCount() - 1 );
+  lastFrame.writeToFile("myFloodFill.png");
+  animation.write("myFloodFill.gif");
   
-  DFS t(png, startPoint, 0.2);
-  ImageTraversal::Iterator it = t.begin();
-  std::cout<< (*it).x << "," << (*it).y << std::endl;
-  while (it != t.end()) {
-    std::cout<< (*it).x << "," << (*it).y << std::endl;
-  }
-  /**REQUIRE( *it == Point(0, 0) ); ++it;
-  REQUIRE( *it == Point(0, 1) ); ++it;
-  REQUIRE( *it == Point(0, 2) ); ++it;
-  REQUIRE( *it == Point(0, 3) ); ++it;
-  REQUIRE( *it == Point(1, 3) ); ++it;
-  REQUIRE( *it == Point(2, 3) ); ++it;  
-  REQUIRE( *it == Point(3, 3) ); ++it;
-  REQUIRE( *it == Point(3, 2) ); ++it;
-  REQUIRE( *it == Point(3, 1) ); ++it;  
-  REQUIRE( *it == Point(3, 0) ); ++it;
-  REQUIRE( *it == Point(2, 0) ); ++it;
-  REQUIRE( *it == Point(1, 0) ); ++it;  **/
-
-
-
   return 0;
 }
 

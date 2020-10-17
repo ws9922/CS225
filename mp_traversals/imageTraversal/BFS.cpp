@@ -36,9 +36,8 @@ BFS::BFS(const PNG & png, const Point & start, double tolerance):png_(png), star
  */
 ImageTraversal::Iterator BFS::begin() {
   /** @todo [Part 1] */
-  to_visit = std::queue<Point>();
-  to_visit.push(start_);
-  ImageTraversal::Iterator it(this, &(this->png_), &(this->start_), this->tolerance_);
+  BFS * input = new BFS(this->png_, this->start_, this->tolerance_);
+  ImageTraversal::Iterator it(input, &(input->png_), &(input->start_), input->tolerance_);
   return it;
 }
 
@@ -47,8 +46,9 @@ ImageTraversal::Iterator BFS::begin() {
  */
 ImageTraversal::Iterator BFS::end() {
   /** @todo [Part 1] */
-  to_visit = std::queue<Point>();
-  ImageTraversal::Iterator it(this, &(this->png_), &(this->start_), this->tolerance_);
+  BFS * input = new BFS(this->png_, this->start_, this->tolerance_);
+  input->to_visit = std::queue<Point>();
+  ImageTraversal::Iterator it(input, &(input->png_), &(input->start_), input->tolerance_);
   return it;
 }
 

@@ -37,9 +37,8 @@ DFS::DFS(const PNG & png, const Point & start, double tolerance):png_(png), star
  */
 ImageTraversal::Iterator DFS::begin() {
   /** @todo [Part 1] */
-  to_visit = std::stack<Point>();
-  to_visit.push(start_);
-  ImageTraversal::Iterator it(this, &(this->png_), &(this->start_), this->tolerance_);
+  DFS * input = new DFS(this->png_, this->start_, this->tolerance_);
+  ImageTraversal::Iterator it(input, &(input->png_), &(input->start_), input->tolerance_);
   return it;
 }
 
@@ -48,8 +47,9 @@ ImageTraversal::Iterator DFS::begin() {
  */
 ImageTraversal::Iterator DFS::end() {
   /** @todo [Part 1] */
-  to_visit = std::stack<Point>();
-  ImageTraversal::Iterator it(this, &(this->png_), &(this->start_), this->tolerance_);
+  DFS * input = new DFS(this->png_, this->start_, this->tolerance_);
+  input->to_visit = std::stack<Point>();
+  ImageTraversal::Iterator it(input, &(input->png_), &(input->start_), input->tolerance_);
   return it;
 }
 

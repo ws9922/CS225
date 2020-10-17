@@ -38,7 +38,6 @@ ImageTraversal::Iterator::Iterator(ImageTraversal * traversal, const PNG * png, 
   png_ = png;
   start_ = start;
   tolerance_ = tolerance;
-  std::vector<Point> visited;
   visited.push_back(*start_);
 }
 
@@ -74,7 +73,7 @@ ImageTraversal::Iterator & ImageTraversal::Iterator::operator++() {
       visited.push_back(below_point);
     }
   }
-  if(x - 1 >= 0) {
+  if(x >= 1) {
     HSLAPixel left = png_->getPixel(x - 1, y);
     Point left_point(x - 1 , y);
     if (ImageTraversal::calculateDelta(start_pixel, left) < tolerance_ && std::find(visited.begin(), visited.end(), left_point) == visited.end()) {
@@ -82,7 +81,7 @@ ImageTraversal::Iterator & ImageTraversal::Iterator::operator++() {
       visited.push_back(left_point);
     }
   }
-  if(y - 1 >= 0) {
+  if(y >= 1) {
     HSLAPixel above = png_->getPixel(x, y - 1);
     Point above_point(x , y - 1);
     if (ImageTraversal::calculateDelta(start_pixel, above) < tolerance_ && std::find(visited.begin(), visited.end(), above_point) == visited.end()) {
