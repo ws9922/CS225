@@ -18,8 +18,8 @@ using namespace cs225;
  */
 FloodFilledImage::FloodFilledImage(const PNG & png):png_(png) {
   /** @todo [Part 2] */
-  store_tvs = std::queue<ImageTraversal*>();
-  store_cp = std::queue<ColorPicker*>();
+  store_tvs = std::vector<ImageTraversal*>();
+  store_cp = std::vector<ColorPicker*>();
 }
 
 /**
@@ -31,8 +31,8 @@ FloodFilledImage::FloodFilledImage(const PNG & png):png_(png) {
  */
 void FloodFilledImage::addFloodFill(ImageTraversal & traversal, ColorPicker & colorPicker) {
   /** @todo [Part 2] */
-  store_tvs.push(&traversal);
-  store_cp.push(&colorPicker);
+  store_tvs.push_back(&traversal);
+  store_cp.push_back(&colorPicker);
 }
 
 /**
@@ -59,11 +59,11 @@ Animation FloodFilledImage::animate(unsigned frameInterval) const {
   /** @todo [Part 2] */
   PNG after = png_;
   int step = 0;
-  /**while (!store_tvs.empty() && !store_cp.empty()) {
-    ImageTraversal * tvs = store_tvs.front();
-    store_tvs.pop();
-    ColorPicker * cp = store_cp.front();
-    store_cp.pop();
+  int size = store_tvs.size();
+  animation.addFrame(after);
+  for (int i = 0; i < size; i++) {
+    ImageTraversal * tvs = store_tvs[i];
+    ColorPicker * cp = store_cp[i];
     for (ImageTraversal::Iterator it = tvs->begin(); it != tvs->end(); ++it) {
       Point to_change_point = *it;
       HSLAPixel& to_change_pixel = after.getPixel(to_change_point.x, to_change_point.y);
@@ -74,7 +74,8 @@ Animation FloodFilledImage::animate(unsigned frameInterval) const {
       }
     }
   }
-  if (step % frameInterval != 0) {
+  animation.addFrame(after);
+  /**if (step % frameInterval != 0) {
     animation.addFrame(after);
   }**/
   
