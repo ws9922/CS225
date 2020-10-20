@@ -35,8 +35,8 @@ public:
 private:
 	/** @todo [Part 1] */
 	/** add private members here*/
-  PNG const &  png_;
-  Point const & start_;
+  const PNG *  png_;
+  const Point & start_;
   double tolerance_;
   HSLAPixel start_pixel;
   std::stack<Point> to_visit;

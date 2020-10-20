@@ -33,5 +33,5 @@ private:
 	/** add private members here*/
   std::vector<ImageTraversal*> store_tvs;
   std::vector<ColorPicker*> store_cp;
-  const PNG & png_;
+  const PNG * png_;
 };

@@ -38,7 +38,7 @@ ImageTraversal::Iterator::Iterator(ImageTraversal * traversal, const PNG * png, 
   png_ = png;
   start_ = start;
   tolerance_ = tolerance;
-  visited.push_back(*start_);
+  //visited.push_back(*start_);
 }
 
 /**
@@ -49,7 +49,19 @@ ImageTraversal::Iterator::Iterator(ImageTraversal * traversal, const PNG * png, 
 ImageTraversal::Iterator & ImageTraversal::Iterator::operator++() {
   /** @todo [Part 1] */
   Point point = traversal_->peek();
+  visited.push_back(point);
   traversal_->pop();
+  if (!traversal_->empty()) {
+    while (std::find(visited.begin(), visited.end(), traversal_->peek()) != visited.end()) {
+        traversal_->pop();
+        if(traversal_->empty()) {
+          break;
+        }
+      }
+  }
+  
+  
+  
   HSLAPixel start_pixel = png_->getPixel(start_->x, start_->y);
   unsigned int height = png_->height();
   unsigned int width = png_->width();
@@ -62,7 +74,7 @@ ImageTraversal::Iterator & ImageTraversal::Iterator::operator++() {
     Point right_point(x + 1, y);
     if (ImageTraversal::calculateDelta(start_pixel, right) < tolerance_ && std::find(visited.begin(), visited.end(), right_point) == visited.end()) {
       traversal_->add(right_point);
-      visited.push_back(right_point);
+      //visited.push_back(right_point);
     }
   }
   if(y + 1 < height) {
@@ -70,7 +82,7 @@ ImageTraversal::Iterator & ImageTraversal::Iterator::operator++() {
     Point below_point(x , y + 1);
     if (ImageTraversal::calculateDelta(start_pixel, below) < tolerance_ && std::find(visited.begin(), visited.end(), below_point) == visited.end()) {
       traversal_->add(below_point);
-      visited.push_back(below_point);
+      //visited.push_back(below_point);
     }
   }
   if(x >= 1) {
@@ -78,7 +90,7 @@ ImageTraversal::Iterator & ImageTraversal::Iterator::operator++() {
     Point left_point(x - 1 , y);
     if (ImageTraversal::calculateDelta(start_pixel, left) < tolerance_ && std::find(visited.begin(), visited.end(), left_point) == visited.end()) {
       traversal_->add(left_point);
-      visited.push_back(left_point);
+      //visited.push_back(left_point);
     }
   }
   if(y >= 1) {
@@ -86,7 +98,7 @@ ImageTraversal::Iterator & ImageTraversal::Iterator::operator++() {
     Point above_point(x , y - 1);
     if (ImageTraversal::calculateDelta(start_pixel, above) < tolerance_ && std::find(visited.begin(), visited.end(), above_point) == visited.end()) {
       traversal_->add(above_point);
-      visited.push_back(above_point);
+      //visited.push_back(above_point);
     }
   }
   
@@ -126,6 +138,4 @@ bool ImageTraversal::Iterator::operator!=(const ImageTraversal::Iterator &other)
   {
     return true;
   }
-  
 }
-

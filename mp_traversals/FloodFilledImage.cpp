@@ -16,7 +16,7 @@ using namespace cs225;
  * 
  * @param png The starting image of a FloodFilledImage
  */
-FloodFilledImage::FloodFilledImage(const PNG & png):png_(png) {
+FloodFilledImage::FloodFilledImage(const PNG & png):png_(&png) {
   /** @todo [Part 2] */
   store_tvs = std::vector<ImageTraversal*>();
   store_cp = std::vector<ColorPicker*>();
@@ -57,7 +57,7 @@ void FloodFilledImage::addFloodFill(ImageTraversal & traversal, ColorPicker & co
 Animation FloodFilledImage::animate(unsigned frameInterval) const {
   Animation animation;
   /** @todo [Part 2] */
-  PNG after = png_;
+  PNG after = *png_;
   int step = 0;
   int size = store_tvs.size();
   animation.addFrame(after);

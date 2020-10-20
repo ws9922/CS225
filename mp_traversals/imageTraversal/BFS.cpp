@@ -22,7 +22,7 @@ using namespace cs225;
  * @param tolerance If the current point is too different (difference larger than tolerance) with the start point,
  * it will not be included in this BFS
  */
-BFS::BFS(const PNG & png, const Point & start, double tolerance):png_(png), start_(start) {  
+BFS::BFS(const PNG & png, const Point & start, double tolerance):png_(&png), start_(start) {  
   /** @todo [Part 1] */
   tolerance_ = tolerance;
   unsigned x = start.x;
@@ -36,8 +36,8 @@ BFS::BFS(const PNG & png, const Point & start, double tolerance):png_(png), star
  */
 ImageTraversal::Iterator BFS::begin() {
   /** @todo [Part 1] */
-  BFS * input = new BFS(this->png_, this->start_, this->tolerance_);
-  ImageTraversal::Iterator it(input, &(input->png_), &(input->start_), input->tolerance_);
+  BFS * input = new BFS(*(this->png_), this->start_, this->tolerance_);
+  ImageTraversal::Iterator it(input, input->png_, &(input->start_), input->tolerance_);
   return it;
 }
 
@@ -46,9 +46,9 @@ ImageTraversal::Iterator BFS::begin() {
  */
 ImageTraversal::Iterator BFS::end() {
   /** @todo [Part 1] */
-  BFS * input = new BFS(this->png_, this->start_, this->tolerance_);
+  BFS * input = new BFS(*(this->png_), this->start_, this->tolerance_);
   input->to_visit = std::queue<Point>();
-  ImageTraversal::Iterator it(input, &(input->png_), &(input->start_), input->tolerance_);
+  ImageTraversal::Iterator it(input, input->png_, &(input->start_), input->tolerance_);
   return it;
 }
 

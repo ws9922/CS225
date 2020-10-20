@@ -23,7 +23,7 @@
  * @param tolerance If the current point is too different (difference larger than tolerance) with the start point,
  * it will not be included in this DFS
  */
-DFS::DFS(const PNG & png, const Point & start, double tolerance):png_(png), start_(start) {  
+DFS::DFS(const PNG & png, const Point & start, double tolerance):png_(&png), start_(start) {  
   /** @todo [Part 1] */
   tolerance_ = tolerance;
   unsigned x = start.x;
@@ -37,8 +37,8 @@ DFS::DFS(const PNG & png, const Point & start, double tolerance):png_(png), star
  */
 ImageTraversal::Iterator DFS::begin() {
   /** @todo [Part 1] */
-  DFS * input = new DFS(this->png_, this->start_, this->tolerance_);
-  ImageTraversal::Iterator it(input, &(input->png_), &(input->start_), input->tolerance_);
+  DFS * input = new DFS(*(this->png_), this->start_, this->tolerance_);
+  ImageTraversal::Iterator it(input, input->png_, &(input->start_), input->tolerance_);
   return it;
 }
 
@@ -47,9 +47,9 @@ ImageTraversal::Iterator DFS::begin() {
  */
 ImageTraversal::Iterator DFS::end() {
   /** @todo [Part 1] */
-  DFS * input = new DFS(this->png_, this->start_, this->tolerance_);
+  DFS * input = new DFS(*(this->png_), this->start_, this->tolerance_);
   input->to_visit = std::stack<Point>();
-  ImageTraversal::Iterator it(input, &(input->png_), &(input->start_), input->tolerance_);
+  ImageTraversal::Iterator it(input, input->png_, &(input->start_), input->tolerance_);
   return it;
 }
 
