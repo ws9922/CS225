@@ -106,6 +106,9 @@ class KDTree
     bool shouldReplace(const Point<Dim>& target, const Point<Dim>& currentBest,
                        const Point<Dim>& potential) const;
 
+
+
+   
     /**
      * Constructs a KDTree from a vector of Points, each having dimension Dim.
      *
@@ -232,6 +235,7 @@ class KDTree
      */
     Point<Dim> findNearestNeighbor(const Point<Dim>& query) const;
 
+    
     // functions used for grading:
 
     /**
@@ -259,6 +263,15 @@ class KDTree
     /**
      * @todo Add your helper functions here.
      */
+    int partition(vector<Point<Dim>>& points, int left, int right, int pivotIndex, int dim);
+    Point<Dim> quickselect(vector<Point<Dim>>& points, int left, int right, int k, int dim);
+    KDTreeNode* buildTree(vector<Point<Dim>>& points, int dim, int left, int right);
+    Point<Dim> findNearestNeighbor_(const Point<Dim>& query, int dim, const KDTreeNode* curRoot) const;
+
+    void copy(const KDTree<Dim>& rhs);
+    KDTreeNode* copy(const KDTreeNode* current);
+    void clear(KDTreeNode* current);
+    
 };
 
 #include "kdtree.hpp"

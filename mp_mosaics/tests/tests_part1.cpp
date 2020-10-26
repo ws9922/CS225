@@ -82,6 +82,23 @@ TEST_CASE("KDTree::shouldReplace Tests", "[weight=1][part=1]") {
 }
 
 
+TEST_CASE("KDTree::partition", "[weight=1][part=1]") {
+  double coords[6][2] = {
+    {-15, 7}, {6, 7}, {-13, -1},
+    {-5, 0}, {14, -3}, {14, 2}
+  };
+
+  vector<Point<2>> points;
+  for (int i = 0; i < 6; ++i)
+      points.push_back(Point<2>(coords[i]));
+  
+
+  KDTree<2> tree(points);
+  //Point<2> result = tree.quickselect(points, 0, 5, 3, 0);
+  //Point<2> result2 = tree.quickselect(points, 0, 5, 0, 1);
+  tree.printTree(std::cout);
+}
+
 // //
 // // Simple Constructor
 // //
