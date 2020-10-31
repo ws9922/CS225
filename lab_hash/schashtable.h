@@ -93,7 +93,6 @@ class SCHashTable : public HashTable<K, V>
 
     // inherited from HashTable
     virtual void resizeTable();
-    void insert(const K& key, const V& value, std::list<std::pair<K, V>>* to_table, size_t to_size);
 };
 #include "sciterator.h"
 #include "schashtable.cpp"

@@ -81,23 +81,19 @@ void LPHashTable<K, V>::insert(K const& key, V const& value)
      * Also, don't forget to mark the cell for probing with should_probe!
      */
     std::pair<K, V>* to_push = new std::pair<K, V>(key, value);
-    insert(to_push, table, should_probe, size);
+    unsigned int theHash = hash(to_push->first, size);
+    // to_push.first = key;
+    // to_push.second = value;
+    unsigned int idx = theHash;
+    while (table[idx] != NULL) {
+        idx = (idx + 1) % size;
+    }
+    table[idx] = to_push;
+    should_probe[idx] = true;
     elems++;
     if (shouldResize()) {
         resizeTable();
     }
-}
-template <class K, class V>
-void LPHashTable<K, V>::insert(std::pair<K, V>* to_push, std::pair<K, V>** to_table, bool* to_should_probe, size_t to_size) {
-    unsigned int theHash = hash(to_push->first, to_size);
-    // to_push.first = key;
-    // to_push.second = value;
-    unsigned int idx = theHash;
-    while (to_table[idx] != NULL) {
-        idx = (idx + 1) % to_size;
-    }
-    to_table[idx] = to_push;
-    to_should_probe[idx] = true;
 }
 
 template <class K, class V>
@@ -198,7 +194,15 @@ void LPHashTable<K, V>::resizeTable()
     }
     for (size_t slot = 0; slot < size; slot++) {
         if (table[slot] != NULL) {
-            insert(table[slot], new_table, new_should_probe, new_size);
+            unsigned int theHash = hash(table[slot]->first, new_size);
+            // to_push.first = key;
+            // to_push.second = value;
+            unsigned int idx = theHash;
+            while (new_table[idx] != NULL) {
+                idx = (idx + 1) % new_size;
+            }
+            new_table[idx] = table[slot];
+            new_should_probe[idx] = true;
         }
     }
     std::pair<K, V>** tmp = table;

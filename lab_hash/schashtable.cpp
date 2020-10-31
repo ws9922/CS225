@@ -56,22 +56,18 @@ void SCHashTable<K, V>::insert(K const& key, V const& value)
      * @todo Implement this function.
      *
      */
-    insert(key, value, table, size);
+    unsigned int theHash = hash(key, size);
+    std::list<std::pair<K, V>>& theList = table[theHash];
+    std::pair<K, V> to_push;
+    to_push.first = key;
+    to_push.second = value;
+    theList.push_front(to_push);
     elems++;
     if (shouldResize()) {
         resizeTable();
     }
 }
 
-template <class K, class V>
-void SCHashTable<K, V>::insert(const K& key, const V& value, std::list<std::pair<K, V>>* to_table, size_t to_size){
-    unsigned int theHash = hash(key, to_size);
-    std::list<std::pair<K, V>>& theList = to_table[theHash];
-    std::pair<K, V> to_push;
-    to_push.first = key;
-    to_push.second = value;
-    theList.push_front(to_push);
-}
 
 template <class K, class V>
 void SCHashTable<K, V>::remove(K const& key)
@@ -167,7 +163,12 @@ void SCHashTable<K, V>::resizeTable()
     size_t new_size = findPrime(size * 2);
     std::list<std::pair<K, V>>* new_table = new std::list<std::pair<K, V>>[new_size];
     for (iterator it = begin(); it != end(); it++) {
-        insert((*it).first, (*it).second, new_table, new_size);
+        unsigned int theHash = hash((*it).first, new_size);
+        std::list<std::pair<K, V>>& theList = new_table[theHash];
+        std::pair<K, V> to_push;
+        to_push.first = (*it).first;
+        to_push.second = (*it).second;
+        theList.push_front(to_push);
     }
     std::list<std::pair<K, V>>* tmp = table;
     table = new_table;

@@ -81,28 +81,24 @@ void DHHashTable<K, V>::insert(K const& key, V const& value)
      *  0.7). **Do this check *after* increasing elems!!** Also, don't
      *  forget to mark the cell for probing with should_probe!
      */
-
-    insert(key, value, table, should_probe, size);
+    unsigned int Hash1 = hash(key, size);
+    unsigned int Hash2 = secondary_hash(key, size);
+    std::pair<K, V>* to_push = new std::pair<K, V>(key, value);
+    // to_push.first = key;
+    // to_push.second = value;
+    unsigned int idx = Hash1;
+    while (table[idx] != NULL) {
+        idx = (idx + Hash2) % size;
+    }
+    table[idx] = to_push;
+    should_probe[idx] = true;
     elems++;
     if (shouldResize()) {
         resizeTable();
     }
 }
 
-template <class K, class V>
-void DHHashTable<K, V>::insert(K const& key, V const& value, std::pair<K, V>** to_table, bool* to_should_probe, size_t to_size) {
-    unsigned int Hash1 = hash(key, to_size);
-    unsigned int Hash2 = secondary_hash(key, to_size);
-    std::pair<K, V>* to_push = new std::pair<K, V>(key, value);
-    // to_push.first = key;
-    // to_push.second = value;
-    unsigned int idx = Hash1;
-    while (to_table[idx] != NULL) {
-        idx = (idx + Hash2) % to_size;
-    }
-    to_table[idx] = to_push;
-    to_should_probe[idx] = true;
-}
+
 
 template <class K, class V>
 void DHHashTable<K, V>::remove(K const& key)
