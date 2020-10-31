@@ -112,7 +112,7 @@ class LPHashTable : public HashTable<K, V>
 
     // inherited from HashTable
     virtual void resizeTable();
-    void insert(K const& key, V const& value, std::pair<K, V>** to_table, bool* to_should_probe, size_t to_size);
+    void insert(std::pair<K, V>* to_push, std::pair<K, V>** to_table, bool* to_should_probe, size_t to_size);
 };
 
 #include "lpiterator.h"
