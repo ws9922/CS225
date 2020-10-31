@@ -113,6 +113,8 @@ class DHHashTable : public HashTable<K, V>
     // inherited from HashTable
     virtual void resizeTable();
 
+    void insert(K const& key, V const& value, std::pair<K, V>** to_table, bool* to_should_probe, size_t to_size);
+
     void destroy();
 
     void copy(const DHHashTable& other);

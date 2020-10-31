@@ -4,6 +4,8 @@
  */
 
 #include "schashtable.h"
+#include <iostream>
+using namespace hashes;
  
 template <class K, class V>
 SCHashTable<K, V>::SCHashTable(size_t tsize)
@@ -54,19 +56,41 @@ void SCHashTable<K, V>::insert(K const& key, V const& value)
      * @todo Implement this function.
      *
      */
+    insert(key, value, table, size);
+    elems++;
+    if (shouldResize()) {
+        resizeTable();
+    }
+}
+
+template <class K, class V>
+void SCHashTable<K, V>::insert(const K& key, const V& value, std::list<std::pair<K, V>>* to_table, size_t to_size){
+    unsigned int theHash = hash(key, to_size);
+    std::list<std::pair<K, V>>& theList = to_table[theHash];
+    std::pair<K, V> to_push;
+    to_push.first = key;
+    to_push.second = value;
+    theList.push_front(to_push);
 }
 
 template <class K, class V>
 void SCHashTable<K, V>::remove(K const& key)
 {
-    typename std::list<std::pair<K, V>>::iterator it;
+    //typename std::list<std::pair<K, V>>::iterator it;
     /**
      * @todo Implement this function.
      *
      * Please read the note in the lab spec about list iterators and the
      * erase() function on std::list!
      */
-    (void) key; // prevent warnings... When you implement this function, remove this line.
+    unsigned int theHash = hash(key, size);
+    for (typename std::list<std::pair<K,V> >::iterator it = table[theHash].begin(); it != table[theHash].end(); it++) {
+        if ((*it).first == key) {
+            table[theHash].erase(it);
+            elems--;
+            break;
+        }
+    }
 }
 
 template <class K, class V>
@@ -76,7 +100,12 @@ V SCHashTable<K, V>::find(K const& key) const
     /**
      * @todo: Implement this function.
      */
-
+    unsigned int theHash = hash(key, size);
+    for (typename std::list<std::pair<K,V> >::iterator it = table[theHash].begin(); it != table[theHash].end(); it++) {
+        if ((*it).first == key) {
+            return (*it).second;
+        }
+    }
     return V();
 }
 
@@ -134,4 +163,14 @@ void SCHashTable<K, V>::resizeTable()
      *
      * @hint Use findPrime()!
      */
+    //size = 
+    size_t new_size = findPrime(size * 2);
+    std::list<std::pair<K, V>>* new_table = new std::list<std::pair<K, V>>[new_size];
+    for (iterator it = begin(); it != end(); it++) {
+        insert((*it).first, (*it).second, new_table, new_size);
+    }
+    std::list<std::pair<K, V>>* tmp = table;
+    table = new_table;
+    size = new_size;
+    delete[] tmp;
 }
