@@ -6,9 +6,6 @@
 #include <set>
 
 SquareMaze::SquareMaze(){
-    _height = 0;
-    _width = 0;
-    maze = NULL;
 }	
 
 void SquareMaze::makeMaze(int width, int height){
@@ -16,10 +13,9 @@ void SquareMaze::makeMaze(int width, int height){
     _width =  width;
     if(!walls.empty()){
         walls.clear();
-        delete maze;
     }
-    maze = new DisjointSets();
-    maze->addelements(width * height);
+    DisjointSets maze;
+    maze.addelements(width * height);
     std::vector<std::pair<bool, bool>> row;
     for(int i = 0; i < height; i++){
         walls.push_back(row);
@@ -41,46 +37,46 @@ void SquareMaze::makeMaze(int width, int height){
             int y = wall_cells[i] / width;
             int idx = wall_cells[i];
             if(y == height - 1){
-                if(maze->find(idx) != maze->find(idx + 1)){
+                if(maze.find(idx) != maze.find(idx + 1)){
                     walls[y][x].second = false;
-                    maze->setunion(idx, idx + 1);
+                    maze.setunion(idx, idx + 1);
                 }
                 wall_cells.erase(wall_cells.begin() + i);
                 i--;
             }else if(x == width - 1){
-                if(maze->find(idx) != maze->find(idx + width)){
+                if(maze.find(idx) != maze.find(idx + width)){
                     walls[y][x].first = false;
-                    maze->setunion(idx, idx + width);
+                    maze.setunion(idx, idx + width);
                 }
                 wall_cells.erase(wall_cells.begin() + i);
                 i--;
             }else{
-                if(maze->find(idx) == maze->find(idx + 1) &&  maze->find(idx) == maze->find(idx + width)){
+                if(maze.find(idx) == maze.find(idx + 1) &&  maze.find(idx) == maze.find(idx + width)){
                     wall_cells.erase(wall_cells.begin() + i);
                     i--;
-                }else if(maze->find(idx) == maze->find(idx + 1)){
+                }else if(maze.find(idx) == maze.find(idx + 1)){
                     walls[y][x].first = false;
-                    maze->setunion(idx, idx + width);
+                    maze.setunion(idx, idx + width);
                     wall_cells.erase(wall_cells.begin() + i);
                     i--;
-                }else if(maze->find(idx) == maze->find(idx + width)){
+                }else if(maze.find(idx) == maze.find(idx + width)){
                     walls[y][x].second = false;
-                    maze->setunion(idx, idx + 1);
+                    maze.setunion(idx, idx + 1);
                     wall_cells.erase(wall_cells.begin() + i);
                     i--;
                 }else{
                     int dir = rand() % 2;
                     if(dir == 0){
                         walls[y][x].second = false;
-                        maze->setunion(idx, idx + 1);
+                        maze.setunion(idx, idx + 1);
                     }else{
                         walls[y][x].first = false;
-                        maze->setunion(idx, idx + width);
+                        maze.setunion(idx, idx + width);
                     }
                 }
             }
         }
-    }   
+    }
 }		
 bool SquareMaze::canTravel(int x, int y, int dir) const{
     std::pair<bool, bool> wall = walls[y][x];
