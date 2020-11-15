@@ -23,6 +23,15 @@ using std::ifstream;
 AnagramDict::AnagramDict(const string& filename)
 {
     /* Your code goes here! */
+    ifstream wordsFile(filename);
+    string word;
+    if (wordsFile.is_open()) {
+        /* Reads a line from `wordsFile` into `word` until the file ends. */
+        while (getline(wordsFile, word)) {
+            vector<std::pair<char, int>> key = word_to_key(word);
+            (key_map_anagram[key]).push_back(word);
+        }
+    }
 }
 
 /**
@@ -32,6 +41,10 @@ AnagramDict::AnagramDict(const string& filename)
 AnagramDict::AnagramDict(const vector<string>& words)
 {
     /* Your code goes here! */
+    for(string word : words){
+        vector<std::pair<char, int>> key = word_to_key(word);
+        (key_map_anagram[key]).push_back(word);
+    }
 }
 
 /**
@@ -43,7 +56,11 @@ AnagramDict::AnagramDict(const vector<string>& words)
 vector<string> AnagramDict::get_anagrams(const string& word) const
 {
     /* Your code goes here! */
-    return vector<string>();
+    std::vector<std::pair<char, int>> key = word_to_key(word);
+    auto lookUp = key_map_anagram.find(key);
+    if(lookUp == key_map_anagram.end() || (lookUp->second).size() == 1)
+        return vector<string>();
+    return lookUp->second;
 }
 
 /**
@@ -55,5 +72,27 @@ vector<string> AnagramDict::get_anagrams(const string& word) const
 vector<vector<string>> AnagramDict::get_all_anagrams() const
 {
     /* Your code goes here! */
-    return vector<vector<string>>();
+    vector<vector<string>> result;
+    for(std::pair<std::vector<std::pair<char, int>>, std::vector<std::string>> key_anagram : key_map_anagram){
+        if(key_anagram.second.size() > 1){
+            result.push_back(key_anagram.second);
+        }
+    }
+    return result;
+}
+
+vector<std::pair<char, int>> AnagramDict::word_to_key(std::string word) const{
+    std::map<char, int> char_map_int;
+    vector<std::pair<char, int>> result;
+    for(char c : word){
+        if(char_map_int.find(c) == char_map_int.end()){
+            char_map_int[c] = 1;
+        }else{
+            char_map_int[c]++;
+        } 
+    }
+    for(std::pair<const char, int>& char_frequency : char_map_int){
+        result.push_back(char_frequency);
+    }
+    return result;
 }
