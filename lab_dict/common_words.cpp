@@ -82,19 +82,20 @@ vector<string> CommonWords::get_common_words(unsigned int n) const
 {
     vector<string> out;
     /* Your code goes here! */
-    for(std::pair<std::string, unsigned int> word_number : common){
+    std::map<std::string, unsigned int> common_n;
+
+    for (size_t i = 0; i < file_word_maps.size(); i++) {
+        map<string, unsigned int> file = file_word_maps[i];
+        for(std::pair<const string, unsigned int>& word_frequency : file){
+            if(word_frequency.second >= n){
+                common_n[word_frequency.first]++;
+            }
+        }
+    }
+    for(std::pair<const string, unsigned int>& word_number : common_n){
         if(word_number.second == file_word_maps.size()){
             out.push_back(word_number.first);
         }
-    }
-    for(size_t i = 0; i < out.size(); i++){
-        for(map<string, unsigned int> word_map : file_word_maps){
-            if(word_map[out[i]] < n){
-                out.erase(out.begin() + i);
-                i--;
-                break;
-            }
-        } 
     }
     return out;
 }
