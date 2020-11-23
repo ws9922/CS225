@@ -170,3 +170,21 @@ TEST_CASE("List::sort #2", "[weight=5][part=2]") {
 
   REQUIRE( b3 == expected );
 }
+
+
+// TEST_CASE("List::mytest", "[weight=2][part=2][valgrind]") {
+//     List<int> list;
+
+//     //for (int i=1; i<4; i++)
+//     list.insertBack(2);
+//     list.insertBack(3);
+//     list.insertBack(1);
+//     list.sort();
+
+//     stringstream s;
+//     list.print(s);
+
+//     std::cout << s.str() << std::endl;
+//     //REQUIRE(s.str() == "< 3 2 1 6 5 4 9 8 7 10 >");
+
+// }

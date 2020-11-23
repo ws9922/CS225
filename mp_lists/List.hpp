@@ -195,36 +195,28 @@ void List<T>::reverse(ListNode *& startPoint, ListNode *& endPoint) {
   if (startPoint == NULL || endPoint == NULL) {
     return;
   }
-  ListNode * temp;
-  ListNode * current = endPoint;
-  ListNode* last;
-  ListNode* next;
-  if(startPoint->next != NULL) {
-    last = startPoint->prev;
-  } else {
-    last = NULL;
+  ListNode * start_prev = startPoint->prev;
+  ListNode * end_next = endPoint->next;
+  ListNode * cur = startPoint;
+  while (cur != endPoint){
+      ListNode * temp = cur->next;
+      cur->next = cur->prev;
+      cur->prev = temp;
+      cur = temp;
   }
-  if(endPoint->next != NULL) {
-    next = endPoint->next;
-  } else {
-    next = NULL;
+  startPoint->next = end_next;
+  if(end_next != NULL){
+    end_next->prev = startPoint;
   }
-  while (startPoint != endPoint) {
-    temp = endPoint->prev;
-    endPoint->prev = endPoint->next;
-    endPoint->next = temp;
-    endPoint = temp;
+  endPoint->next = endPoint->prev;
+  endPoint->prev = start_prev;
+  if(start_prev != NULL){
+    start_prev->next = endPoint;
   }
-  endPoint->prev = endPoint->next;
-  endPoint->next = next;
-  if(next != NULL) {
-    next->next = endPoint;
-  }
-  startPoint = current;
-  startPoint->prev = last;
-  if(last != NULL) {
-    last->next = startPoint;
-  }
+  ListNode * temp = endPoint;
+  endPoint = startPoint;
+  startPoint = temp; 
+  
 }
 
 /**
@@ -310,51 +302,38 @@ typename List<T>::ListNode * List<T>::merge(ListNode * first, ListNode* second) 
   if (second == NULL) {
     return first;
   }
-  /**ListNode* firsttail = first;
-  while (firsttail->next != NULL) {
-    firsttail = firsttail->next;
+  ListNode * cur1 = first;
+  ListNode * cur2 = second;
+  ListNode * result; 
+  if(first->data < second->data){
+    result = first;
+    cur1 = first->next;
+  }else {
+    result = second;
+    cur2 = second->next;
   }
-  firsttail->next = second;
-  second->pre = firsttail;
-  first.s**/
-  ListNode* head = NULL;
-  ListNode* temp = NULL;
-  ListNode* current = NULL;
-  bool condition = true;
-  while(true){
-    if(second->data<first->data) {
-      temp =second;
-      second = second->next;
-      if(condition) {
-        head = temp;
-      } else {
-      current->next = temp;
-      temp->prev = current;
-      temp->next = NULL;
-      }
-      current = temp;
-      if(second == NULL) {
-        current->next = first;
-        return head;
-      }
-    } else {
-      temp = first;
-      first = first->next;
-      if(condition) {
-        head = temp;
-      } else {
-        current->next = temp;
-        temp->prev = current;
-        temp->next = NULL;
-      }
-      current = temp;
-      if (first == NULL) {
-        current->next = second;
-        return head;
-      }
+  ListNode * cur = result;
+  while(cur1 != NULL && cur2 != NULL){
+    if(cur1->data < cur2->data){
+      cur->next = cur1;
+      cur1->prev = cur;
+      cur = cur1;
+      cur1 = cur1->next;
+    }else{
+      cur->next = cur2;
+      cur2->prev = cur;
+      cur = cur2;
+      cur2 = cur2->next;
     }
-    condition = false;
   }
+  if(cur1 == NULL){
+    cur->next = cur2;
+    cur2->prev = cur;
+  }else{
+    cur->next = cur1;
+    cur1->prev = cur;
+  }
+  return result;
 }
 
 /**
@@ -377,26 +356,10 @@ typename List<T>::ListNode* List<T>::mergesort(ListNode * start, int chainLength
   if (chainLength <= 1) {
     return start;
   }
-  ListNode* current = start;
-  if (chainLength % 2 == 0) {
-    int half = chainLength / 2;
-    for(int i = 0; i < half && current->next != NULL; i++) {
-      current = current->next;
-    }
-    if(current->prev) {
-      current->prev->next = NULL;
-      current->prev = NULL;
-    }
-    return merge(mergesort(start, half), mergesort(current, half));
-  } else {
-    int half = chainLength / 2;
-    for (int i = 0; i < half && current->next!=NULL; i++) {
-      current = current->next;
-    }
-    if (current->prev) {
-      current->prev->next = NULL;
-      current->prev = NULL;
-    }
-    return merge(mergesort(start, half), mergesort(current, half + 1));
-  }
+  int half = chainLength / 2;
+  ListNode * right_start = split(start, half);
+  ListNode * left = mergesort(start, half);
+  ListNode * right = mergesort(right_start, chainLength - half);
+  return merge(left, right);
+
 }
