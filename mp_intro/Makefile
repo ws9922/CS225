@@ -57,4 +57,3 @@ tests.o: tests/tests.cpp tests/catch.hpp cs225/PNG.h cs225/HSLAPixel.h
 
 clean :
 	-rm -f *.o $(EXENAME) test
-
